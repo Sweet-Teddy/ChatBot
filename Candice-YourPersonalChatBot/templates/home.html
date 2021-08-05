@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Learning Cytoscape.js</title>
+      <link
+      rel="shortcut icon"
+      type="image/x-icon"
+
+      href="https://user-images.githubusercontent.com/20112458/49326597-773b7280-f57a-11e8-853d-20ed61d18b0d.png"
+    />
+     <script src="/static/js/jquery-1.11.2.min.js"></script>
+     <script src="/static/js/cytoscape.min.js"></script>
+     <script src="/static/js/code.js"></script>
+<!--  <script src="{{ url_for('static',filename='js/jquery-1.11.2.min.js') }}"></script>-->
+<!--  <script src="{{ url_for('static',filename='js/cytoscape.min.js') }}"></script>-->
+<!--&lt;!&ndash;   <script src="/static/js/code.js"></script>&ndash;&gt;-->
+<!--    <script src="{{ url_for('static',filename='js/code.js') }}"></script>-->
+    <style type="text/css">
+        /* cytoscape graph */
+        #cy {
+            height: 300px;
+            width: 800px;
+            background-color: #6495ED;
+            display: block;
+            opacity:0.8;
+        }
+    </style>
+  <style>
+<!--    html{-->
+<!--        width:100%;height:100%;-->
+<!--        }-->
+      div.background {
+        padding: 0;
+        margin: 0;
+        background: url("/static/images/robot.jpg") ;
+<!--        background-size: 100% 100%;-->
+        position: center;
+        opacity:0.8;
+      }
+
+      h1 {
+        background-color: lightgreen;
+        display: inline-block;
+        font-size: 3em;
+        margin: 0;
+        padding: 14px;
+      }
+      h3 {
+        color: black;
+        font-size: 20px;
+        margin-top: 3px;
+        text-align: center;
+      }
+      #chatbox {
+        margin-left: auto;
+        margin-right: auto;
+        width: 40%;
+        margin-top: 60px;
+      }
+      #userInput {
+        margin-left: auto;
+        margin-right: auto;
+        width: 40%;
+        margin-top: 60px;
+      }
+      #textInput {
+        width: 90%;
+        border: none;
+        border-bottom: 3px solid black;
+        font-family: monospace;
+        font-size: 17px;
+      }
+      .userText {
+        color: white;
+        font-family: monospace;
+        font-size: 17px;
+        text-align: right;
+        line-height: 30px;
+      }
+      .userText span {
+        background-color: #808080;
+        padding: 10px;
+        border-radius: 2px;
+      }
+      .botText {
+        color: white;
+        font-family: monospace;
+        font-size: 17px;
+        text-align: left;
+        line-height: 30px;
+      }
+      .botText span {
+        background-color: green;
+        padding: 10px;
+        border-radius: 2px;
+      }
+      #tidbit {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 300px;
+      }
+      .boxed {
+        margin-left: auto;
+        margin-right: auto;
+<!--        width: 78%;-->
+        width: 50%;
+        margin-top: 60px;
+        border: 1px solid green;
+      }
+      .box {
+        border: 2px solid black;
+      }
+
+    </style>
+</head>
+<!--  <body  style="background-image: url('/static/images/robot.jpg') ">-->
+<body >
+<div class="background">
+<!--          src="https://user-images.githubusercontent.com/20112458/49326597-773b7280-f57a-11e8-853d-20ed61d18b0d.png"-->
+    <center>
+      <h1 class="logo cursive">
+        <img
+
+          src="/static/images/flags/smallRobot.png"
+          alt="CANDICE"
+          style="width:40px;height:40px;"
+        />
+          基于知识图谱的医疗问答机器人
+      </h1>
+    </center>
+    <h3>
+      <p>
+        有问题，联系我 👉
+        <a href="https://twitter.com/_sahilrajput">@pingan.com.cn</a>.
+      </p>
+    </h3>
+    <div>
+
+
+    <div class="box"></div>
+<!--        src="https://user-images.githubusercontent.com/20112458/49326597-773b7280-f57a-11e8-853d-20ed61d18b0d.png"-->
+    <div class="boxed">
+      <div>
+        <div id="chatbox">
+          <img
+            src="/static/images/flags/beetbot.png"
+            alt="CANDICE"
+            style="width:40px;height:40px;"
+          />
+          <p class="botText">
+            <span>你好，我是你的私人助理 </span>
+          </p>
+        </div>
+
+        <div id="userInput" >
+          <input id="textInput" class="form-control transparent" type="text" name="msg" placeholder="向我提问吧~" />
+        </div>
+      </div>
+      <script>
+        function getBotResponse() {
+          var rawText = $("#textInput").val();
+          var userHtml = '<p class="userText"><span>' + rawText + "</span></p>";
+          $("#textInput").val("");
+          $("#chatbox").append(userHtml);
+          document
+            .getElementById("userInput")
+            .scrollIntoView({ block: "start", behavior: "smooth" });
+          $.get("/get", { msg: rawText }).done(function(data) {
+            var botHtml = '<p class="botText"><span>' + data + "</span></p>";
+            $("#chatbox").append(botHtml);
+            document
+              .getElementById("userInput")
+              .scrollIntoView({ block: "start", behavior: "smooth" });
+          });
+        }
+        $("#textInput").keypress(function(e) {
+          if (e.which == 13) {
+            getBotResponse();
+          }
+        });
+      </script>
+    </div>
+    <div align="center">
+            <form action="http://127.0.0.1:5000/" method="post">
+                <input type="text" placeholder="请输入关键字"  id="kw"/>
+        	    <input type="submit" value="搜索" id="search-btn"/>
+            </form>
+
+
+      <div id="cy" align="left"></div>
+    </div>
+    </div>
+  </div>
+  </body>
+</html>
